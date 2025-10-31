@@ -1,8 +1,14 @@
 HELP.md
+
+### Build output ###
 target/
+**/target/
+**/build/
+
+### Maven wrapper ###
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+mvnw
+mvnw.cmd
 
 ### STS ###
 .apt_generated
@@ -25,12 +31,36 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
 
-### Custom ###
+### Spring Boot / Java ###
+# Escludi artefatti compilati e runtime
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Non tracciare output o file temporanei
+hs_err_pid*
+replay_pid*
+
+### Configurations donnees sensibles ###
 /src/main/resources/application.properties
+/application.properties
+*.local.properties
+*.env
+*.secrets.*
+.env.*
+
+
+.DS_Store
+Thumbs.db
+
+### Custom ###
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
