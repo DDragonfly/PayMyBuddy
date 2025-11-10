@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserConnectionRepository extends JpaRepository<UserConnectionEntity, UserConnectionId> {
 
-    boolean existByUser_UserIdAndConnection_UserId(Integer userId, Integer connectionId);
+   // boolean existsByUser_UserIdAndConnection_UserId(Integer userId, Integer connectionId);
 
     @Query("select c.connection from UserConnectionEntity c where c.user.userId = :userId")
     List<UserEntity> findFriendsOf(@Param("userId")Integer userId);
