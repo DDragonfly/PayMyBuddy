@@ -1,4 +1,4 @@
-package com.openclassrooms.paymybuddy.infrastructure.persistence;
+package com.openclassrooms.paymybuddy.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

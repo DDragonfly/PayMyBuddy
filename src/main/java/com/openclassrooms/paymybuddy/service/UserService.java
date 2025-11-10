@@ -2,14 +2,16 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.exception.BusinessException;
 import com.openclassrooms.paymybuddy.exception.NotFoundException;
-import com.openclassrooms.paymybuddy.infrastructure.persistence.UserConnectionEntity;
-import com.openclassrooms.paymybuddy.infrastructure.persistence.UserConnectionId;
-import com.openclassrooms.paymybuddy.infrastructure.persistence.UserEntity;
+import com.openclassrooms.paymybuddy.model.UserConnectionEntity;
+import com.openclassrooms.paymybuddy.model.UserConnectionId;
+import com.openclassrooms.paymybuddy.model.UserEntity;
 import com.openclassrooms.paymybuddy.repository.UserConnectionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +34,13 @@ public class UserService {
         if (ownerId.equals(friendId)) throw new BusinessException("Cannot add yourself");
         var owner = users.findById(ownerId).orElseThrow(() -> new NotFoundException("Owner not found"));
         var friend = users.findById(friendId).orElseThrow(() -> new NotFoundException("Friend not found"));
-        var id = new UserConnectionId((owner.getUserId(), friend.getUserId());
+        var id = new UserConnectionId(owner.getUserId(), friend.getUserId());
         if (connections.existsById(id)) return;
         connections.save(UserConnectionEntity.builder().id(id).user(owner).connection(friend).build());
+    }
+
+    public List<UserEntity> listFriends(Integer userId) {
+        if (!users.existsById(userId)) throw new NotFoundException("User not found");
+        return connections.findFriendsOf(userId);
     }
 }
