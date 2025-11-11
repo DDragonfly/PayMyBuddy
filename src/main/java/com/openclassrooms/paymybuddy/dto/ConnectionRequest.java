@@ -1,4 +1,8 @@
 package com.openclassrooms.paymybuddy.dto;
 
-public record ConnectionRequest(Integer ownerId, Integer friendId) {
-}
+import jakarta.validation.constraints.NotNull;
+
+public record ConnectionRequest(
+        @NotNull Integer ownerId,
+        @NotNull Integer friendId
+) {}
