@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay My Buddy - Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="pm-root">
+<main class="pm-center">
+    <section class="pm-card" role="region" aria-labelledby="pm-title">
+        <header class="pm-logo">
+            <h1 id="pm-title" class="pm-logo-title">Pay My Buddy</h1>
+        </header>
+
+        <form class="pm-form" th:action="@{/login}" method="post" novalidate>
+            <div class="pm-field">
+                <label class="sr-only" for="email">Mail</label>
+                <input class="pm-input" id="email" name="email" type="email" placeholder="Mail" autocomplete="email" required>
+            </div>
+
+            <div class="pm-field">
+                <label class="sr-only" for="password">Mot de passe</label>
+                <input class="pm-input" id="password" name="password" type="password" placeholder="Mot de passe" autocomplete="current-password" required>
+            </div>
+
+            <button type="submit" class="pm-button pm-button--blue-wide">Se connecter</button>
+
+            <p class="pm-error" th:if="${param.error}">Identifiants incorrects. Merci de réessayer.</p>
+
+        </form>
+    </section>
+</main>
+
+</body>
+</html>

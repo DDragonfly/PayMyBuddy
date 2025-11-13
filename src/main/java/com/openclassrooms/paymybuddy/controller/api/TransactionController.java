@@ -1,4 +1,4 @@
-package com.openclassrooms.paymybuddy.controller;
+package com.openclassrooms.paymybuddy.controller.api;
 
 import com.openclassrooms.paymybuddy.dto.TransferRequest;
 import com.openclassrooms.paymybuddy.dto.TransferResponse;
