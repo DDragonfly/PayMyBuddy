@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay My Buddy - Transférer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="pm-root">
+
+<header class="pm-header">
+    <div class="pm-header-inner">
+        <div class="pm-brand">Pay My Buddy</div>
+
+        <nav class="pm-nav" aria-label="Navigation principale">
+            <a class="pm-nav-link pm-nav-link--active" aria-current="page" th:href="@{/transfer}">Transférer</a>
+
+            <a class="pm-nav-link" th:href="@{/profile}">Profil</a>
+
+            <a class="pm-nav-link" th:href="@{/relation/add}">Ajouter relation</a>
+
+            <a class="pm-nav-link" th:href="@{/logout}">Se déconnecter</a>
+        </nav>
+    </div>
+</header>
+
+<main class="pm-main">
+    <section class="pm-transfer" aria-labelledby="transfer-title">
+        <h1 id="transfer-title" class="sr-only">Effectuer un transfert</h1>
+
+        <form class="pm-transfer-form" th:action="@{/transfer}" method="post" novalidate>
+            <div class="pm-transfer-field">
+                <label class="sr-only" for="connection">Relation</label>
+                <select id="connection" name="connectionId" class="pm-input pm-select" required>
+                    <option value="" disabled selected>Sélectionner une relation</option>
+                    <option th:each="connection : ${connections}" th:value="${connection.id}"
+                            th:text="${connection.name}">Laure-Anne
+                    </option>
+                </select>
+            </div>
+
+            <div class="pm-transfer-field pm-transfer-field--grow">
+                <label class="sr-only" for="description">Description</label>
+                <input id="description" name="description" type="text" class="pm-input"
+                       placeholder="Description" required>
+            </div>
+
+            <div class="pm-transfer-field pm-transfer-amount">
+                <label class="sr-only" for="amount">Montant</label>
+                <div class="pm-amount-wrapper">
+                    <input id="amount" name="amount" type="number" min="0" step="1" class="pm-input pm-input--amount"
+                           value="0" required>
+                    <span class="pm-amount-currency">€</span>
+                </div>
+            </div>
+
+            <button type="submit" class="pm-button pm-button--blue-tall">Payer</button>
+        </form>
+
+        <section class="pm-transfer-table-wrapper" aria-label="Historique des transferts">
+            <header class="pm-transfer-table-header">
+                <h2 class="pm-transfer-title">Mes Transactions</h2>
+            </header>
+
+            <div class="pm-transfer-table-scroll">
+                <table class="pm-transfer-table">
+                    <caption class="sr-only">Liste des transactions précédents</caption>
+                    <thead>
+                    <tr>
+                        <th scope="col">Relations</th>
+                        <th scope="col">Description</th>
+                        <th scope="col" class="pm-transfer-col-amount">Montant</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="t : ${transfers}">
+                        <td th:text="${t.connectionName}">Laure-Anne</td>
+                        <td th:text="${t.description}">Restaurant</td>
+                        <td class="pm-transfer-amount-cell" th:text="${t.amount} + '€'">10€</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+
+</body>
+</html>

@@ -1,6 +1,9 @@
 package com.openclassrooms.paymybuddy.controller.web;
 
+import com.openclassrooms.paymybuddy.security.CustomUserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -21,18 +24,23 @@ public class ViewController {
         return "register";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
-
     @GetMapping("/connections/add")
     public String connectionsAdd() {
         return "connections_add";
     }
 
     @GetMapping("/profile")
-    public String profile() {
+    public String profile(Authentication authentication, Model model) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails principal)) {
+            return "redirect:/login";
+        }
+
+        var userEntity = principal.getUser();
+        model.addAttribute("user", userEntity);
         return "profile";
     }
+
+    @GetMapping("/transfer")
+    public String transfer() { return "transfer"; }
+
 }

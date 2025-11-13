@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay My Buddy - Profil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="pm-root">
+
+<header class="pm-header">
+    <div class="pm-header-inner">
+        <div class="pm-brand">Pay My Buddy</div>
+
+        <nav class="pm-nav" aria-label="Navigation principale">
+            <a class="pm-nav-link" th:href="@{/transfer}">Transférer</a>
+
+            <a class="pm-nav-link pm-nav-link--active" aria-current="page" th:href="@{/profile}">Profil</a>
+
+            <a class="pm-nav-link" th:href="@{/relation/add}">Ajouter relation</a>
+
+            <a class="pm-nav-link" th:href="@{/logout}">Se déconnecter</a>
+
+        </nav>
+    </div>
+</header>
+
+<main class="pm-main">
+    <section class="pm-profile" aria-labelledby="profile-title">
+        <h1 id="profile-title" class="sr-only">Profil utilisateur</h1>
+
+        <div class="pm-profile-layout">
+            <div class="pm-profile-info">
+                <div class="pm-profile-row">
+                    <span class="pm-profile-label">Username</span>
+                    <span class="pm-profile-value" th:text="${user.username}">@username</span>
+                </div>
+
+                <div class="pm-profile-row">
+                    <span class="pm-profile-label">Mail</span>
+                    <span class="pm-profile-value" th:text="${user.email}">nom@domain.com</span>
+                </div>
+
+                <div class="pm-profile-row">
+                    <span class="pm-profile-label">Mot de passe</span>
+                    <span class="pm-profile-value">mot de passe</span>
+                </div>
+            </div>
+
+            <button type="button" class="pm-button pm-button--orange">Modifier</button>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
