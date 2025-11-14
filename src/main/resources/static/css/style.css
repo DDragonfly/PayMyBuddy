@@ -414,4 +414,41 @@ body {
     text-align: right;
 }
 
+/* ---------- Page d'ajout d'une relation ---------- */
+
+.pm-add-relation {
+    margin-top: 160px;
+    display: flex;
+    justify-content: center;
+}
+
+.pm-add-form {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.pm-add-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pm-add-label {
+    font-size: 20px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.pm-input--add-relation {
+    width: 484px;
+    height: 54px;
+    font-size: 20px;
+}
+
+.pm-add-form .pm-input--add-relation::placeholder {
+    color: #828282;
+    font-weight: 500;
+}
+
 
