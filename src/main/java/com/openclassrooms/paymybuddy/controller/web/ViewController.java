@@ -39,8 +39,5 @@ public class ViewController {
         model.addAttribute("user", userEntity);
         return "profile";
     }
-
-    @GetMapping("/transfer")
-    public String transfer() { return "transfer"; }
-
 }
+

@@ -398,7 +398,7 @@ body {
 }
 
 .pm-transfer-col-amount {
-    text-align: right;
+    text-align: right !important;
 }
 
 .pm-transfer-table tbody tr {

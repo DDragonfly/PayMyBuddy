@@ -51,6 +51,10 @@
                     class="pm-button pm-button--orange">
                 Ajouter
             </button>
+
+            <p class="pm-success" th:if="${success}" th:text="${success}"></p>
+            <p class="pm-error" th:if="${error}" th:text="${error}"></p>
+
         </form>
     </section>
 </main>

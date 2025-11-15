@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,4 +42,11 @@ public class TransactionService {
 
         return transactionRepository.save(ts);
     }
+
+    @Transactional(readOnly = true)
+    public List<TransactionEntity> findLastForUser(Integer userId) {
+
+        return transactionRepository.findTop10BySender_UserIdOrderByCreatedAtDesc(userId);
+    }
+
 }

@@ -16,6 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository users;
     private final UserConnectionRepository connections;
     private final PasswordEncoder passwordEncoder;
@@ -38,6 +39,17 @@ public class UserService {
         if (connections.existsById(id)) return;
         connections.save(UserConnectionEntity.builder().id(id).user(owner).connection(friend).build());
     }
+
+    public void addConnectionByEmail(Integer ownerId, String friendEmail) {
+        var owner = users.findById(ownerId)
+                .orElseThrow(() -> new NotFoundException("Utilisateur courant introuvable"));
+
+        var friend = users.findByEmail(friendEmail)
+                .orElseThrow(() -> new NotFoundException("Aucun utilisateur trouvé avec cet email"));
+
+        addConnection(owner.getUserId(), friend.getUserId());
+    }
+
 
     public List<UserEntity> listFriends(Integer userId) {
         if (!users.existsById(userId)) throw new NotFoundException("User not found");
