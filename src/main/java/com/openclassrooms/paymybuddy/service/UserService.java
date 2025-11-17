@@ -2,10 +2,10 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.exception.BusinessException;
 import com.openclassrooms.paymybuddy.exception.NotFoundException;
-import com.openclassrooms.paymybuddy.model.UserConnectionEntity;
-import com.openclassrooms.paymybuddy.model.UserConnectionId;
+import com.openclassrooms.paymybuddy.model.ConnectionEntity;
+import com.openclassrooms.paymybuddy.model.ConnectionId;
 import com.openclassrooms.paymybuddy.model.UserEntity;
-import com.openclassrooms.paymybuddy.repository.UserConnectionRepository;
+import com.openclassrooms.paymybuddy.repository.ConnectionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +18,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository users;
-    private final UserConnectionRepository connections;
+    private final ConnectionRepository connections;
     private final PasswordEncoder passwordEncoder;
 
     public UserEntity register(String email, String username, String rawPassword) {
@@ -35,9 +35,9 @@ public class UserService {
         if (ownerId.equals(friendId)) throw new BusinessException("Cannot add yourself");
         var owner = users.findById(ownerId).orElseThrow(() -> new NotFoundException("Owner not found"));
         var friend = users.findById(friendId).orElseThrow(() -> new NotFoundException("Friend not found"));
-        var id = new UserConnectionId(owner.getUserId(), friend.getUserId());
+        var id = new ConnectionId(owner.getUserId(), friend.getUserId());
         if (connections.existsById(id)) return;
-        connections.save(UserConnectionEntity.builder().id(id).user(owner).connection(friend).build());
+        connections.save(ConnectionEntity.builder().id(id).user(owner).connection(friend).build());
     }
 
     public void addConnectionByEmail(Integer ownerId, String friendEmail) {

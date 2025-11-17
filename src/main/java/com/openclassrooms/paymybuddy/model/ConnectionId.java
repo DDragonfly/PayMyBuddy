@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Embeddable
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode
-public class UserConnectionId implements Serializable {
+public class ConnectionId implements Serializable {
 
     @Column(name = "user_id")
     private Integer userId;

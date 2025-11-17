@@ -1,6 +1,6 @@
 package com.openclassrooms.paymybuddy.controller.web;
 
-import com.openclassrooms.paymybuddy.security.CustomUserDetails;
+import com.openclassrooms.paymybuddy.security.AppUserDetails;
 import com.openclassrooms.paymybuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,14 +11,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-public class WebConnectionController {
+public class ConnectionController {
 
     private final UserService userService;
 
     @PostMapping("/connections/add")
     public String addConnection(@RequestParam("email") String friendEmail, Authentication authentication, RedirectAttributes redirectAttributes) {
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails principal)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof AppUserDetails principal)) {
             return "redirect:/login";
         }
 

@@ -1,7 +1,6 @@
 package com.openclassrooms.paymybuddy.controller.web;
 
-import com.openclassrooms.paymybuddy.repository.UserRepository;
-import com.openclassrooms.paymybuddy.security.CustomUserDetails;
+import com.openclassrooms.paymybuddy.security.AppUserDetails;
 import com.openclassrooms.paymybuddy.service.TransactionService;
 import com.openclassrooms.paymybuddy.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class WebTransactionController {
+public class TransactionController {
 
     private final UserService userService;
     private final TransactionService transactionService;
@@ -28,7 +26,7 @@ public class WebTransactionController {
 
     @GetMapping("/transfer")
     public String showTransfer(Authentication authentication, Model model) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails principal)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof AppUserDetails principal)) {
             return "redirect:/login";
         }
 
@@ -62,7 +60,7 @@ public class WebTransactionController {
                              Authentication authentication,
                              RedirectAttributes redirectAttributes) {
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails principal)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof AppUserDetails principal)) {
             return "redirect:/login";
         }
 
@@ -75,7 +73,7 @@ public class WebTransactionController {
                     description,
                     amount
             );
-            redirectAttributes.addFlashAttribute("success", "Transfert effectué avec succès.");
+            redirectAttributes.addFlashAttribute("success", "Transaction effectué avec succès.");
         } catch (Exception ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }

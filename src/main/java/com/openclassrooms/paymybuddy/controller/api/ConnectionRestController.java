@@ -1,6 +1,6 @@
 package com.openclassrooms.paymybuddy.controller.api;
 
-import com.openclassrooms.paymybuddy.dto.ConnectionRequest;
+import com.openclassrooms.paymybuddy.dto.AddConnectionRequest;
 import com.openclassrooms.paymybuddy.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/connections")
 @RequiredArgsConstructor
-public class ConnectionController {
+public class ConnectionRestController {
 
     private final UserService userService;
 
@@ -28,7 +28,7 @@ public class ConnectionController {
     public record FriendResponse(Integer userId, String username, String email) {}
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody ConnectionRequest request) {
+    public ResponseEntity<Void> add(@Valid @RequestBody AddConnectionRequest request) {
         userService.addConnection(request.ownerId(), request.friendId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

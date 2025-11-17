@@ -2,10 +2,10 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.exception.BusinessException;
 import com.openclassrooms.paymybuddy.exception.NotFoundException;
-import com.openclassrooms.paymybuddy.model.UserConnectionEntity;
-import com.openclassrooms.paymybuddy.model.UserConnectionId;
+import com.openclassrooms.paymybuddy.model.ConnectionEntity;
+import com.openclassrooms.paymybuddy.model.ConnectionId;
 import com.openclassrooms.paymybuddy.model.UserEntity;
-import com.openclassrooms.paymybuddy.repository.UserConnectionRepository;
+import com.openclassrooms.paymybuddy.repository.ConnectionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ public class UserServiceTest {
     UserRepository userRepository;
 
     @Mock
-    UserConnectionRepository userConnectionRepository;
+    ConnectionRepository connectionRepository;
 
     @Mock
     PasswordEncoder passwordEncoder;
@@ -77,7 +77,7 @@ public class UserServiceTest {
 
         verify(userRepository).existsByEmail(email);
         verifyNoMoreInteractions(userRepository);
-        verifyNoInteractions(passwordEncoder, userConnectionRepository);
+        verifyNoInteractions(passwordEncoder, connectionRepository);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class UserServiceTest {
 
         when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
         when(userRepository.findById(friendId)).thenReturn(Optional.of(friend));
-        when(userConnectionRepository.existsById(new UserConnectionId(ownerId, friendId))).thenReturn(false);
+        when(connectionRepository.existsById(new ConnectionId(ownerId, friendId))).thenReturn(false);
 
         // when
         userService.addConnection(ownerId, friendId);
@@ -99,8 +99,8 @@ public class UserServiceTest {
         // then
         verify(userRepository).findById(ownerId);
         verify(userRepository).findById(friendId);
-        verify(userConnectionRepository).existsById(new UserConnectionId(ownerId, friendId));
-        verify(userConnectionRepository).save(any(UserConnectionEntity.class));
+        verify(connectionRepository).existsById(new ConnectionId(ownerId, friendId));
+        verify(connectionRepository).save(any(ConnectionEntity.class));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class UserServiceTest {
         assertThrows(BusinessException.class, () -> userService.addConnection(ownerId, friendId));
 
         // then
-        verifyNoInteractions(userRepository, userConnectionRepository);
+        verifyNoInteractions(userRepository, connectionRepository);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class UserServiceTest {
         UserEntity f2 = UserEntity.builder().userId(3).username("Giovanni").build();
 
         when(userRepository.existsById(userId)).thenReturn(true);
-        when(userConnectionRepository.findFriendsOf(userId)).thenReturn(List.of(f1, f2));
+        when(connectionRepository.findFriendsOf(userId)).thenReturn(List.of(f1, f2));
 
         // when
         var result = userService.listFriends(userId);
@@ -135,7 +135,7 @@ public class UserServiceTest {
         assertEquals("Giovanni", result.get(1).getUsername());
 
         verify(userRepository).existsById(userId);
-        verify(userConnectionRepository).findFriendsOf(userId);
+        verify(connectionRepository).findFriendsOf(userId);
     }
 
     @Test
@@ -149,6 +149,6 @@ public class UserServiceTest {
 
         // then
         verify(userRepository).existsById(userId);
-        verifyNoInteractions(userConnectionRepository);
+        verifyNoInteractions(connectionRepository);
     }
 }

@@ -1,13 +1,13 @@
 package com.openclassrooms.paymybuddy.controller.web;
 
-import com.openclassrooms.paymybuddy.security.CustomUserDetails;
+import com.openclassrooms.paymybuddy.security.AppUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ViewController {
+public class PageController {
 
     @GetMapping("/")
     public String home() {
@@ -31,7 +31,7 @@ public class ViewController {
 
     @GetMapping("/profile")
     public String profile(Authentication authentication, Model model) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails principal)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof AppUserDetails principal)) {
             return "redirect:/login";
         }
 

@@ -134,4 +134,45 @@ public class TransactionServiceTest {
         verify(userRepository).findById(receiverId);
         verifyNoInteractions(transactionRepository);
     }
+
+    @Test
+    void createTransaction_withFractionalAmount_calculatesFeeCorrectly() {
+        // given
+        Integer senderId = 1;
+        Integer receiverId = 2;
+        String description = "Restaurant not round";
+        BigDecimal amount = new BigDecimal("254.79");
+
+        BigDecimal expectedAmount = amount.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal expectedFee = expectedAmount
+                .multiply(new BigDecimal("0.005"))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        UserEntity sender = UserEntity.builder().userId(senderId).email("sencer@mail.com").build();
+        UserEntity receiver = UserEntity.builder().userId(receiverId).email("receiver@mail.com").build();
+
+        when(userRepository.findById(senderId)).thenReturn(Optional.of(sender));
+        when(userRepository.findById(receiverId)).thenReturn(Optional.of(receiver));
+        when(transactionRepository.save(any(TransactionEntity.class)))
+                .thenAnswer(invocation -> {
+                    TransactionEntity t = invocation.getArgument(0);
+                    t.setId(10);
+                    return t;
+                });
+
+        // when
+        TransactionEntity result = transactionService.createTransaction(senderId, receiverId, description, amount);
+
+        // then
+        assertNotNull(result.getId());
+        assertEquals(sender, result.getSender());
+        assertEquals(receiver, result.getReceiver());
+        assertEquals(description, result.getDescription());
+        assertEquals(expectedAmount, result.getAmount());
+        assertEquals(expectedFee, result.getFee());
+
+        verify(userRepository).findById(senderId);
+        verify(userRepository).findById(receiverId);
+        verify(transactionRepository).save(any(TransactionEntity.class));
+    }
 }

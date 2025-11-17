@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 @Validated
-public class WebAuthController {
+public class AuthController {
 
     private final UserService userService;
 

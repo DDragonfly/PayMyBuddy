@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @Table(name = "user_connection")
 @Getter
 @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class UserConnectionEntity {
+public class ConnectionEntity {
 
     @EmbeddedId
-    private UserConnectionId id;
+    private ConnectionId id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("userId")

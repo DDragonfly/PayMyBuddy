@@ -1,6 +1,6 @@
 package com.openclassrooms.paymybuddy.config;
 
-import com.openclassrooms.paymybuddy.security.CustomUserDetailsService;
+import com.openclassrooms.paymybuddy.security.AppUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
+    private final AppUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
