@@ -62,6 +62,14 @@ public class PageControllerTest {
     }
 
     @Test
+    void registerPage_withSuccessParam_shouldShowSuccessMessage() throws Exception {
+        mockMvc.perform(get("/register").param("success", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Compte créé correctement.")));
+    }
+
+
+    @Test
     void root_shouldRedirectToLoginPage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
@@ -82,5 +90,23 @@ public class PageControllerTest {
                 .andExpect(view().name("profile"))
                 .andExpect(model().attributeExists("user"))
                 .andExpect(content().string(containsString("monica")));
+    }
+
+    @Test
+    void connectionsAddPage_withSuccessFlash_shouldShowSuccessMessage() throws Exception {
+        mockMvc.perform(get("/connections/add")
+                        .with(user(principal))
+                        .flashAttr("success", "Relation ajoutée avec succès."))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Relation ajoutée avec succès.")));
+    }
+
+    @Test
+    void connectionsAddPage_withErrorFlash_shouldShowErrorMessage() throws Exception {
+        mockMvc.perform(get("/connections/add")
+                        .with(user(principal))
+                        .flashAttr("error", "Aucun utilisateur trouvé avec cet email"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Aucun utilisateur trouvé avec cet email")));
     }
 }

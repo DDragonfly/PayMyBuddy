@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -105,5 +106,31 @@ public class TransactionControllerTest {
         mockMvc.perform(get("/transfer"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    @Test
+    void transferPage_withSuccessFlash_shouldShowSuccessMessage() throws Exception {
+        when(userService.listFriends(1)).thenReturn(List.of());
+
+        mockMvc.perform(get("/transfer")
+                        .with(user(principal))
+                        .flashAttr("success", "Transfert effectué avec succès."))
+                .andExpect(status().isOk())
+                .andExpect(view().name("transfer"))
+                .andExpect(content().string(
+                        containsString("Transfert effectué avec succès.")));
+    }
+
+    @Test
+    void transferPage_withErrorFlash_shouldShowErrorMessage() throws Exception {
+        when(userService.listFriends(1)).thenReturn(List.of());
+
+        mockMvc.perform(get("/transfer")
+                        .with(user(principal))
+                        .flashAttr("error", "Sender and Receiver must differ"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("transfer"))
+                .andExpect(content().string(
+                        containsString("Sender and Receiver must differ")));
     }
 }
