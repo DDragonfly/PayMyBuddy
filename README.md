@@ -1,84 +1,212 @@
-# Pay My Buddy – Backend Java Spring Boot
+# **Pay My Buddy – Application Web Java Spring Boot**
 
-Ce projet fait partie du parcours **Développeur d’application Java** d’OpenClassrooms.  
-Il s’agit d’une application web Spring Boot qui permet de gérer les comptes, les connexions entre utilisateurs et les transferts d’argent avec une commission de 0,5 %.
+Projet réalisé dans le cadre du parcours **Développeur d’Application Java – OpenClassrooms**.  
+Il s’agit d’une application web permettant de :
+
+- créer un compte utilisateur
+    
+- ajouter des connexions (amis)
+    
+- réaliser des transferts d’argent
+    
+- calculer automatiquement une commission de **0,5 %**
+    
+- consulter l’historique des opérations
+    
 
 ---
 
-## Configuration
+# **Architecture du projet**
 
-L’application utilise **MySQL** et **Flyway** pour la base de données.  
-Les identifiants de connexion ne sont **pas inclus dans le code source** : ils doivent être fournis via des **variables d’environnement** ou un **fichier de configuration externe**.
+L'application suit une architecture en couches claire :
+
+- **Controller (Web & REST)**
+    
+- **Service (logique métier + transactions @Transactional)**
+    
+- **DAL / Repository (Spring Data JPA)**
+    
+- **Modèle / Entités (JPA)**
+    
+
+Le design suit les conventions Spring Boot 3, SOLID et MVC.
+
+---
+
+# **Modèle Physique de Données (MPD)**
+
+Le MPD complet est disponible dans :  
+📁 `database/MPD.png`  
+📁 `database/README.md`
+
+Résumé :
+
+- `users` : comptes utilisateurs
+    
+- `user_connection` : connexions (relation N:N)
+    
+- `transactions` : transferts avec commission
+    
+
+Chaque table comporte :
+
+- clé primaire
+    
+- contraintes d’intégrité (`CHECK`, `UNIQUE`, `FOREIGN KEY`)
+    
+- règles métier (pas d’auto-transfert, montants positifs, etc.)
+    
+
+---
+
+# **Scripts SQL fournis**
+
+Ils se trouvent dans : `database/`
+
+- `schema.sql` – création complète du schéma
+    
+- `data.sql` – jeu d’essai cohérent
+    
+- `test_queries.sql` – requêtes de validation
+    
+
+---
+
+# **Connexion sécurisée à la base de données**
+
+Aucune donnée sensible n’est stockée dans le dépôt GitHub.
+
+Les identifiants sont fournis via :
 
 ### Variables d’environnement
 
-Avant de lancer l’application, configurez les variables suivantes :
+`export DB_URL="jdbc:mysql://localhost:3306/paymybuddy?serverTimezone=UTC" export DB_USER="root" export DB_PASSWORD="votre_mot_de_passe"`
 
-```bash
-export DB_URL="jdbc:mysql://localhost:3306/paymybuddy?serverTimezone=UTC"
-export DB_USER="root"
-export DB_PASSWORD="votre_mot_de_passe"
-```
+### Ou un fichier externe `config/application.properties`
 
-Fichier de configuration externe (alternative)
+`spring.datasource.url=${DB_URL} spring.datasource.username=${DB_USER} spring.datasource.password=${DB_PASSWORD} spring.jpa.hibernate.ddl-auto=validate spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect`
 
-Vous pouvez aussi créer un dossier `config` à côté du fichier JAR, contenant :
+---
 
-```
-config/
- └── application.properties
-paymybuddy.jar
-```
+# **Couche DAL + gestion des transactions**
 
-Contenu du fichier `config/application.properties` :
+La couche DAL est basée sur :
 
-```
-spring.datasource.url=${DB_URL}
-spring.datasource.username=${DB_USER}
-spring.datasource.password=${DB_PASSWORD}
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
-```
+- **Spring Data JPA**
+    
+- Repositories (`UserRepository`, `TransactionRepository`, etc.)
+    
 
-Spring Boot lira automatiquement ce fichier au démarrage, ce qui permet de modifier la configuration sans reconstruire le JAR.
+La logique métier et les accès à la base sont gérés dans :
 
-## Lancement de l’application
-En mode développement (IntelliJ, Eclipse ou CLI)
+- `UserService`
+    
+- `TransactionService`
+    
+
+Les méthodes critiques sont annotées avec :
+
+`@Transactional`
+
+Ce qui garantit :
+
+- **commit automatique** si l’opération réussit
+    
+- **rollback automatique** si une exception métier (`BusinessException`) est levée
+    
+
+---
+
+# **Interface Web (Thymeleaf)**
+
+L’interface respecte les maquettes du projet OpenClassrooms.  
+Les pages HTML incluent :
+
+- Login
+    
+- Register
+    
+- Profil
+    
+- Connexions
+    
+- Transferts
+    
+
+Le front consomme la couche Service et applique :
+
+- bonnes pratiques d’accessibilité (WCAG)
+    
+- labels `sr-only`
+    
+- placeholders explicites
+    
+- navigation simple et conforme aux spécifications
+    
+
+---
+
+# **API REST**
+
+3 contrôleurs REST :
+
+- `/api/auth`
+    
+- `/api/connections`
+    
+- `/api/transactions`
+    
+
+Format JSON validé via des DTO (`RegisterRequest`, `TransferRequest`, etc.)
+
+---
+
+# **Tests (Unitaires + Intégration)**
+
+Technos utilisées : **JUnit 5, Mockito, Spring Boot Test, MockMvc**.
+
+✔ Tests des contrôleurs Web  
+✔ Tests API REST  
+✔ Tests Services  
+✔ Tests d’intégration (base MySQL réelle + transactions rollback)  
+✔ JaCoCo ≈ **80 % de couverture**
+
+Les rapports se trouvent dans :
+
+- `target/site/jacoco/index.html`
+    
+- `target/reports/surefire.html`
+    
+
+---
+
+# **Lancement de l’application**
+
+### Développement
 
 `mvn spring-boot:run`
 
-En mode production (JAR)
+### Production
 
 `java -jar target/paymybuddy-0.0.1-SNAPSHOT.jar`
 
+Accès :  
+[http://localhost:8080](http://localhost:8080)
 
-L’application sera accessible à l’adresse :
-`http://localhost:8080`
+---
 
-## Technologies utilisées
+# **Déploiement**
 
-- Java 21
+L’application peut être déployée via :
 
-- Spring Boot 3 (Web, Data JPA, Security, Validation, Actuator)
+- JAR autonome
+    
+- configuration externalisée (`config/application.properties`)
+    
 
-- MySQL 8
+---
 
-- Flyway pour la gestion des migrations
+# Auteur
 
-- Maven
-
-- Lombok
-
-## Bonnes pratiques
-
-- Aucune donnée sensible n’est stockée dans le code ou sur GitHub.
-
-- Les mots de passe sont externalisés via des variables d’environnement.
-
-- L’accès à la base de données est sécurisé.
-
-## Auteur
-
-Projet développé par Désirée TELARETTI dans le cadre du parcours OpenClassrooms.
+Projet développé par **Désirée TELARETTI**  
+Parcours : _Développeur d’application Java – OpenClassrooms_
