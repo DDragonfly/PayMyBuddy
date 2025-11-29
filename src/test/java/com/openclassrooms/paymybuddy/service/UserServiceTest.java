@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -114,6 +115,39 @@ public class UserServiceTest {
 
         // then
         verifyNoInteractions(userRepository, connectionRepository);
+    }
+
+    @Test
+    void addConnection_whenAlreadyConnected_shouldThrowBusinessException() {
+        Integer ownerId = 1;
+        Integer friendId = 2;
+
+        var owner = UserEntity.builder()
+                .userId(ownerId)
+                .username("monica")
+                .email("monica@test.com")
+                .passwordHash("x")
+                .build();
+
+        var friend = UserEntity.builder()
+                .userId(friendId)
+                .username("chandler")
+                .email("chandler@test.com")
+                .passwordHash("y")
+                .build();
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
+        when(userRepository.findById(friendId)).thenReturn(Optional.of(friend));
+
+        var id = new ConnectionId(ownerId, friendId);
+        when(connectionRepository.existsById(id)).thenReturn(true);
+
+        // WHEN + THEN
+        assertThatThrownBy(() -> userService.addConnection(ownerId, friendId))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage("Cet utilisateur est déjà dans vos connexions.");
+
+        verify(connectionRepository, never()).save(any());
     }
 
     @Test

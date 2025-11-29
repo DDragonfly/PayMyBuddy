@@ -32,12 +32,26 @@ public class UserService {
     }
 
     public void addConnection(Integer ownerId, Integer friendId) {
-        if (ownerId.equals(friendId)) throw new BusinessException("Cannot add yourself");
+        if (ownerId.equals(friendId)) throw new BusinessException("Impossible d’ajouter vous-même.");
+
         var owner = users.findById(ownerId).orElseThrow(() -> new NotFoundException("Owner not found"));
+
         var friend = users.findById(friendId).orElseThrow(() -> new NotFoundException("Friend not found"));
+
         var id = new ConnectionId(owner.getUserId(), friend.getUserId());
-        if (connections.existsById(id)) return;
-        connections.save(ConnectionEntity.builder().id(id).user(owner).connection(friend).build());
+
+        if (connections.existsById(id)) {
+            throw new BusinessException("Cet utilisateur est déjà dans vos connexions.");
+        }
+
+        connections.save(
+                ConnectionEntity.builder()
+                        .id(id)
+                        .user(owner)
+                        .connection(friend)
+                        .build()
+        );
+
     }
 
     public void addConnectionByEmail(Integer ownerId, String friendEmail) {
