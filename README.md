@@ -188,7 +188,7 @@ Les rapports se trouvent dans :
 
 ### Production
 
-`java -jar target/paymybuddy-0.0.1-SNAPSHOT.jar`
+`java -jar test/paymybuddy-0.0.1-SNAPSHOT.jar`
 
 Accès :  
 [http://localhost:8080](http://localhost:8080)
